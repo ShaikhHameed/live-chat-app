@@ -11,8 +11,24 @@ const io = new Server(server, {
     }
 });
 
+io.use((socket, next)=>{
+    const userID = socket.handshake.auth.userid;
+    if(!userID){
+        return next(new Error("Invalid user"));
+    }
+
+    socket.userID = userID;
+    next();
+});
+
 io.on('connection', (socket)=>{
-    socket.emit("Welcome to the jungle");
+    console.log(`${socket.userID} connected`);
+    socket.join(socket.userID);
+    socket.emit("welcome","Welcome to the jungle");
+
+    socket.on('send', (data)=>{
+        socket.to(data.roomid).emit("message-received", {sender:socket.userID, message:data.message});
+    })
 })
 
 

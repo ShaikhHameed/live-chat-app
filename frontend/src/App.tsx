@@ -1,9 +1,11 @@
+import MainChat from "./components/chats/mainChat"
+
 
 function App() {
 
   return (
    <>
-    <h1>Hello World</h1>
+    <MainChat/>
    </>
   )
 }
